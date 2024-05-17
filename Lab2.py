@@ -21,7 +21,6 @@ with open(file_name, 'r') as file:
                 for i in gived_num: print(dc_cifr[i], end=' ')
             else:
                 for i in range(0, len(gived_num) - 1, 2):
-                    print(gived_num[i + 1] + gived_num[i], end='')
-                if len(gived_num) % 2 != 0:
-                    print(gived_num[-1], end='')
+                    gived_num = gived_num[:i] + gived_num[i + 1] + gived_num[i] + gived_num[i + 2:]  # Меняются местами не попарно
+                print(gived_num, end='')
             print()
