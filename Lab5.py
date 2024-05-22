@@ -10,61 +10,71 @@ import time
 import matplotlib.pyplot as plt
 from functools import lru_cache
 
-n=-1
+n = -1
 
 timer=[]
 timer_rec=[]
+fact = [1] * 2
+
+lru_cache(maxsize=None)
+def itfact(x):
+    global fact
+    if fact[1] < x:
+        for i in range(fact[1]+1, x+1):
+            fact[0] = fact[0] * i
+    elif fact[1] > x:
+        for i in range(x+1, fact[1]+1):
+            fact[0] = fact[0] // i
+    fact[1] = x
+    return fact[0]
+
 
 #рекурсия
-
 lru_cache(maxsize=None)
 def rec_f(x):
     if x < 2:
-        return 1
+        return 2
     else:
-        return ((-1)**n)*(rec_f(x-1) + rec_g(x-1))
+        return ((-1)**n) * (rec_f(x - 1) + rec_g(x - 1))
 
 lru_cache(maxsize=None)
 def rec_g(x):
     if x < 2:
         return 1
     else:
-        return rec_f(x-1)+2*rec_g(x-1)
+        return rec_f(x-1) + 2 * rec_g(x-1)
 
-#итерация
 def it_f(x):
-    f=[1]*3
-    g=[1]*3
-    for i in range(2,x+1):
-        g[1] = f[0]+2*g[0]
-        f[-1] = (-1)**x*(f[0] - g[0])
-        f[0], f[1] = f[1], f[2]
-        g[0], g[1] = g[1], g[2]
+    f = [2, 2]
+    g = [1, 1]
+    for i in range(1,x+1):
+        g[1] = f[0] + 2 * g[0]
+        f[1] = ((-1)**n)*(f[0] + g[0])
+        f[0], f[1] = f[1], f[0]
+        g[0], g[1] = g[1], g[0]
 
-    return f[-1], g[-1]
+    return f[1]
 
 while n < 1:
     print("Введите натуральное число от 1 ")
     n = int(input())
 
-
 graf = list(range(1, n+1))
 
 for i in graf:
     start = time.time()
-    result = it_f(i)[0]
+    result = it_f(i)
     end = time.time()
     timer.append(end-start)
     start_rec = time.time()
     res = rec_f(i)
     end_rec = time.time()
     timer_rec.append(end_rec-start_rec)
-    rec_times = end_rec-start_rec
-    iter_times = end-start
-    print("\n", i, "результат рекурсии ",
-          res,"___ результат итерации",
-          result,"___ время  РЕКУРСИИ ",
-          end_rec-start_rec,"___ время  ИТЕРАЦИИ",end-start, sep='\n')
+    print(i,
+          " | Результат рекурсии ->", res,
+          " | результат итерации ->", result,
+          " | время  рекурсии ->", end_rec-start_rec,
+          " | время  итерации ->",end-start)
 
 plt.plot(graf, timer, label='Итерационная функция.')
 plt.plot(graf, timer_rec, label='Рекусионная функция.')
